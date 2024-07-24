@@ -1,24 +1,44 @@
-import React from 'react';
-import { easing } from 'maath';
-import { useSnapshot } from 'valtio';
-import { useFrame } from '@react-three/fiber';
-import { Decal, useGLTF, useTexture } from '@react-three/drei';
+import React, { useRef } from "react";
+import { easing } from "maath";
+import { useSnapshot } from "valtio";
+import { useFrame } from "@react-three/fiber";
+import { Decal, useGLTF, useTexture } from "@react-three/drei";
+import { useDrag } from "@use-gesture/react";
 
-import state from '../store';
+import state from "../store";
 
 const Shirt = () => {
   const snap = useSnapshot(state);
-  const { nodes, materials } = useGLTF('/shirt_baked.glb');
+  const { nodes, materials } = useGLTF("/shirt_baked.glb");
 
   const logoTexture = useTexture(snap.logoDecal);
   const fullTexture = useTexture(snap.fullDecal);
 
-  useFrame((state, delta) => easing.dampC(materials.lambert1.color, snap.color, 0.25, delta));
+  // Reference for the shirt mesh
+  const shirtRef = useRef();
+  const rotationRef = useRef({ x: 0, y: 0 });
+
+  // Apply easing color change
+  useFrame((state, delta) => {
+    easing.dampC(materials.lambert1.color, snap.color, 0.25, delta);
+
+    // Apply the accumulated rotation from dragging
+    if (shirtRef.current) {
+      shirtRef.current.rotation.x = rotationRef.current.x;
+      shirtRef.current.rotation.y = rotationRef.current.y;
+    }
+  });
+
+  // Handle drag events to update rotation
+  const bind = useDrag(({ movement: [mx, my] }) => {
+    rotationRef.current.y = mx * 0.01;
+    rotationRef.current.x = my * 0.01;
+  });
 
   const stateString = JSON.stringify(snap);
 
   return (
-    <group key={stateString}>
+    <group key={stateString} ref={shirtRef} {...bind()}>
       <mesh
         castShadow
         geometry={nodes.T_Shirt_male.geometry}
@@ -26,21 +46,25 @@ const Shirt = () => {
         material-roughness={1}
         dispose={null}
       >
-        {snap.isFullTexture && (<Decal
-          position={[0, 0, 0]}
-          rotation={[0, 0, 0]}
-          scale={1}
-          map={fullTexture}
-        />)}
-        {snap.isLogoTexture && (<Decal
-          position={[0, 0.04, 0.15]}
-          rotation={[0, 0, 0]}
-          scale={0.15}
-          map={logoTexture}
-          anisotropy={16}
-          depthTest={false}
-          depthWrite={true}
-        />)}
+        {snap.isFullTexture && (
+          <Decal
+            position={[0, 0, 0]}
+            rotation={[0, 0, 0]}
+            scale={1}
+            map={fullTexture}
+          />
+        )}
+        {snap.isLogoTexture && (
+          <Decal
+            position={[0, 0.04, 0.15]}
+            rotation={[0, 0, 0]}
+            scale={0.15}
+            map={logoTexture}
+            anisotropy={16}
+            depthTest={false}
+            depthWrite={true}
+          />
+        )}
       </mesh>
     </group>
   );
