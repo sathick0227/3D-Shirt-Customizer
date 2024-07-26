@@ -4,14 +4,17 @@ export const EditorTabs = [
   {
     name: "colorpicker",
     icon: swatch,
+    title: "Choose a product color",
   },
   {
     name: "filepicker",
     icon: fileIcon,
+    title: "Add your design",
   },
   {
-    name: "aipicker",
+    name: "textedit",
     icon: ai,
+    title: "Write what you want",
   },
 ];
 
@@ -27,13 +30,25 @@ export const FilterTabs = [
 ];
 
 export const DecalTypes = {
-  logo: {
-    stateProperty: "logoDecal",
-    filterTab: "logoShirt",
+  A4F: {
+    stateProperty: "logoDecalFront",
+    filterTab: "logoDecalFront",
   },
-  full: {
-    stateProperty: "fullDecal",
-    filterTab: "stylishShirt",
+  A4B: {
+    stateProperty: "logoDecalBack",
+    filterTab: "logoDecalBack",
+  },
+  BOXF: {
+    stateProperty: "boxDecalFront",
+    filterTab: "boxDecalFront",
+  },
+  BOXB: {
+    stateProperty: "boxDecalBack",
+    filterTab: "boxDecalBack",
+  },
+  CHEST: {
+    stateProperty: "smallLogoDecalFront",
+    filterTab: "smallLogoDecalFront",
   },
 };
 

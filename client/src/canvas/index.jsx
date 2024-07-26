@@ -1,9 +1,10 @@
 import { Canvas } from "@react-three/fiber";
-import { Environment, Center } from "@react-three/drei";
+import { Environment } from "@react-three/drei";
 
 import Backdrop from "./Backdrop";
 import CameraRig from "./CameraRig";
 import Shirt from "./Shirt";
+import TestShirt from "./testShirt";
 
 const CanvasModel = () => {
   return (
@@ -17,9 +18,7 @@ const CanvasModel = () => {
       <Environment preset="forest" />
       <CameraRig>
         <Backdrop />
-        <Center>
-          <Shirt />
-        </Center>
+        <Shirt />
       </CameraRig>
     </Canvas>
   );
